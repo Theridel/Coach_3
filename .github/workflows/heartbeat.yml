@@ -31,3 +31,28 @@ jobs:
           name: heartbeat-${{ github.run_number }}-${{ github.run_attempt }}
           path: logs/heartbeat.txt
           retention-days: 3
+
+# --- SECONDO JOB: INSPECTOR (Il nuovo job aggiunto qui) ---
+  inspector_job:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - name: Verifica sito con curl
+        id: check_url
+        env:
+          URL: "https://coach-2-0-git-sviluppo-theridels-projects.vercel.app/"
+        run: |
+          mkdir -p logs
+          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" -L \
+                    --max-time 20 --connect-timeout 5 \
+                    "$URL" || echo "000")
+          TS="$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
+          echo "$TS - Status: $STATUS" > logs/inspector.log
+          echo "Status rilevato: $STATUS"
+
+      - name: Carica artifact inspector
+        uses: actions/upload-artifact@v4
+        with:
+          name: inspector-log-${{ github.run_number }}
+          path: logs/inspector.log
+          retention-days: 7        
