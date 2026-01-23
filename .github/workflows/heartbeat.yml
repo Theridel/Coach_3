@@ -3,7 +3,7 @@ name: Heartbeat - Test ogni 10 minuti
 
 on:
   schedule:
-    - cron: "*/20 * * * *"   # ogni 10 minuti (UTC)
+    - cron: "8 * * * *"   # ogni ora, all'8avo minuto (UTC)
   # workflow_dispatch:
 
 concurrency:
