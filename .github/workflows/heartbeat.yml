@@ -55,4 +55,22 @@ jobs:
         with:
           name: inspector-log-${{ github.run_number }}
           path: logs/inspector.log
-          retention-days: 7        
+          retention-days: 7
+          
+# --- TERZO JOB: INTERROGA SUPABASE ---
+  keep-alive-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simple Ping to Supabase
+        run: |
+          # Facciamo una richiesta anonima. 
+          # Risponderà probabilmente con un 401 (Unauthorized), 
+          # ma è sufficiente per "svegliare" l'infrastruttura.
+          curl -i "https://supabase.com/dashboard/project/wrywcnpbdpdcribpirkr" > supabase_ping.txt
+
+      - name: Upload Simple Ping Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-ping
+          path: supabase_ping.txt
+          retention-days: 7
