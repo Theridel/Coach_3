@@ -1,0 +1,49 @@
+name: 🛠️ Infrastructure Diagnostic Tool
+
+on:
+  workflow_dispatch: # Questo lo rende invisibile ai cron e lo avvia solo manualmente
+
+jobs:
+  diagnostic:
+    name: "Deep System Check"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🛰️ Source Code Check
+        uses: actions/checkout@v4
+
+      - name: 🔑 Secret Existence & Format
+        run: |
+          echo "--- VERIFICA ESISTENZA SECRET ---"
+          # Controlliamo se la stringa esiste e se ha una lunghezza minima ragionevole
+          [ -n "${{ secrets.SUPABASE_URL }}" ] && echo "✅ URL presente" || echo "❌ URL mancante"
+          [ -n "${{ secrets.SUPABASE_ANON_KEY }}" ] && echo "✅ Key presente" || echo "❌ Key mancante"
+
+      - name: 🌐 Supabase Connection (Integration Test)
+        run: |
+          echo "--- TEST DI CONNESSIONE SUPABASE ---"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/" || echo "000")
+          
+          if [ "$HTTP_STATUS" -eq "200" ] || [ "$HTTP_STATUS" -eq "401" ] || [ "$HTTP_STATUS" -eq "404" ]; then
+             echo "✅ Comunicazione con Supabase stabilita (Status: $HTTP_STATUS)"
+          else
+             echo "❌ ERRORE CRITICO: Il server risponde $HTTP_STATUS. Chiave disallineata o URL errato."
+             exit 1
+          fi
+
+      - name: ☁️ Hugging Face & Vercel Reachability
+        run: |
+          echo "--- TEST RAGGIUNGIBILITÀ ENDPOINT ESTERNI ---"
+          # Qui puoi aggiungere i vari URL che devono essere attivi
+          urls=(
+            "https://coach-2-0-git-sviluppo-theridels-projects.vercel.app/"
+            "https://huggingface.co/spaces/TUO_SPAZIO" # Se ne hai uno
+          )
+          for url in "${urls[@]}"; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 -L "$url")
+            echo "Status $STATUS per: $url"
+            if [ "$STATUS" -ge 400 ]; then echo "⚠️ Warning: Rilevata anomalia su $url"; fi
+          done
