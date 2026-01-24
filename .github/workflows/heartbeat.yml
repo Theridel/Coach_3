@@ -1,5 +1,5 @@
 # controlliamo l'ecosistema
-name: Heartbeat - Test ogni 10 minuti
+name: Heartbeat - Test ogni ora
 
 on:
   schedule:
@@ -32,7 +32,7 @@ jobs:
           path: logs/heartbeat.txt
           retention-days: 3
 
-# --- SECONDO JOB: INSPECTOR (Il nuovo job aggiunto qui) ---
+# --- SECONDO JOB: Vercel (Il nuovo job aggiunto qui) ---
   inspector_job:
     runs-on: ubuntu-22.04
     timeout-minutes: 5
@@ -40,13 +40,12 @@ jobs:
       - name: Verifica sito con curl
         id: check_url
         env:
-          SB_URL: ${{ secrets.SUPABASE_URL }}
-          URL: SB_URL
+          APP_URL: "https://coach-2-0-git-sviluppo-theridels-projects.vercel.app/"
         run: |
           mkdir -p logs
           STATUS=$(curl -sS -o /dev/null -w "%{http_code}" -L \
-                    --max-time 20 --connect-timeout 5 \
-                    "$URL" || echo "000")
+                    --max-time 15 --connect-timeout 5 \
+                    "$APP_URL" || echo "000")
           TS="$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
           echo "$TS - Status: $STATUS" > logs/inspector.log
           echo "Status rilevato: $STATUS"
@@ -63,11 +62,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Simple Ping to Supabase
+        env:
+          SB_URL: ${{ secrets.SUPABASE_URL }}
         run: |
           # Facciamo una richiesta anonima. 
           # Risponderà probabilmente con un 401 (Unauthorized), 
           # ma è sufficiente per "svegliare" l'infrastruttura.
-          curl -i "https://supabase.com/dashboard/project/wrywcnpbdpdcribpirkr" > supabase_ping.txt
+          curl -i SB_URL > supabase_ping.txt
 
       - name: Upload Simple Ping Artifact
         uses: actions/upload-artifact@v4
