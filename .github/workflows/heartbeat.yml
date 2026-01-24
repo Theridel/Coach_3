@@ -40,7 +40,8 @@ jobs:
       - name: Verifica sito con curl
         id: check_url
         env:
-          URL: "https://coach-2-0-git-sviluppo-theridels-projects.vercel.app/"
+          SB_URL: ${{ secrets.SUPABASE_URL }}
+          URL: SB_URL
         run: |
           mkdir -p logs
           STATUS=$(curl -sS -o /dev/null -w "%{http_code}" -L \
