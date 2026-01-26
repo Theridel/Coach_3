@@ -1,0 +1,27 @@
+name: AI_Agent_launcher
+
+on:
+  workflow_dispatch: # Questo abilita il tasto "Run workflow" manuale su GitHub
+
+jobs:
+  run_agent:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 1. Checkout del codice
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          # Per ora non usiamo la cache perché il requirements-ai è quasi vuoto
+
+      - name: 3. Installazione dipendenze minime
+        run: |
+          python -m pip install --upgrade pip
+          # Se il file esiste, lo installa, altrimenti prosegue
+          if [ -f requirements-ai.txt ]; then pip install -r requirements-ai.txt; fi
+
+      - name: 4. Esecuzione Agente
+        run: python ai_agent.py
