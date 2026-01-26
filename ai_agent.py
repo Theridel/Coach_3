@@ -46,3 +46,23 @@ def check_environment():
 
 if __name__ == "__main__":
     check_environment()
+
+from modules.envir_manager import get_env_context
+
+# 1. Recupero dei dati dal modulo
+envir = get_env_context()
+
+# 2. Stampa di prova nel main per verifica visiva (come richiesto)
+print(f"{'='*40}")
+print(f"VERIFICA AMBIENTE:")
+for chiave, valore in envir.items():
+    print(f"{chiave:15} : {valore}")
+print(f"{'='*40}")
+
+# 3. Da qui in poi usi solo il dizionario ambiente
+# Esempio: os.chdir(ambiente['ROOT']
+# --- TEST DI VERIFICA (Opzionale, solo per debug visivo) ---
+if __name__ == "__main__":
+    print(f"✅ 'envir' inizializzato in modalità: {envir['ENV']}")
+ #   print(f"📍 Database locale puntato in: {envir['PATH_DB_LOCAL']}")
+    print(envir)
