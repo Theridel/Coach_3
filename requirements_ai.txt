@@ -24,6 +24,10 @@ langchain>=0.2.0,<0.4.0
 # Fondamentale per la gestione degli embeddings (la memoria semantica dell'AI).
 numpy>=1.26.4,<2.1.0
 
+# ANALISI DATI BASE
+# Pandas è utile per formattare i dati prima di inviarli al frontend o all'agente.
+pandas>=2.2.0,<2.2.3
+
 # SUPPORTO DATE (Consigliato per Supabase)
 # Spesso necessario per gestire correttamente i timestamp di Supabase in Python.
 python-dateutil>=2.0.0,<3.0.0
