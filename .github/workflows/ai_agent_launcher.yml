@@ -23,6 +23,10 @@ jobs:
           # Se il file esiste, lo installa, altrimenti prosegue
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements_ai.txt ]; then pip install -r requirements_ai.txt; fi
+
+          # Verifica
+          pip list
+          pip check
           
       - name: 4. Esecuzione Agente
         run: python ai_agent.py
