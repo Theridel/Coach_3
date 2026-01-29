@@ -1,68 +1,83 @@
-from pathlib import Path
 import os
 import sys
+import subprocess
+import threading
+from pathlib import Path
+import gradio as gr
 
-# ==============================================================================
-# AI AGENT - MODULO DI RILEVAZIONE AMBIENTE
-# Versione: 0.1.0 (Basata su logica notebook 0.3.2)
-# ==============================================================================
 
-def check_environment():
-    # 1.1 Logica di rilevazione migliorata per script .py
-    if os.getenv("GITHUB_ACTIONS"):
-        ENV = "GITHUB_ACTION"
-        ROOT = Path.cwd()
-        # GitHub ci dice già su quale branch siamo
-        BRANCH = os.getenv("GITHUB_REF_NAME", "unknown")
-    elif Path("/content").exists():
-        ENV = "COLAB"
-        ROOT = Path("/content")
-        BRANCH = "sviluppo"
-    elif Path("/home/studio-lab-user").exists():
-        ENV = "SAGEMAKER"
-        ROOT = Path("/home/studio-lab-user")
-        BRANCH = "sviluppo"
+# ==========================================================
+# 1) Rilevamento ambiente (SEMPLICE)
+# ==========================================================
+def detect_env():
+    if os.getenv("RUN_CONTEXT") == "HF_SPACE":
+        return "HF_SPACE"
+    elif os.getenv("GITHUB_ACTIONS"):
+        return "GITHUB_ACTION"
     else:
-        ENV = "LOCAL/UNKNOWN"
-        ROOT = Path.cwd()
-        BRANCH = "main"
+        return "LOCAL"
 
-    # 1.2 Configurazione percorsi standard
-    # In GitHub Actions, il repo viene clonato direttamente nella cartella corrente
-    REPO_LOCAL = ROOT 
-    TARGET_MODULES = ROOT / "modules"
 
-    # 1.3 Output di riepilogo
-    print(f"{'='*40}")
-    print(f"🤖 AI AGENT STATUS")
-    print(f"🐍 Python Version: {sys.version.split()[0]}")
-    print(f"🌍 AMBIENTE : {ENV}")
-    print(f"🌿 BRANCH   : {BRANCH}")
-    print(f"📁 ROOT     : {ROOT}")
-    print(f"📂 MODULES  : {TARGET_MODULES}")
-    print(f"{'='*40}")
-    
-    return ENV, ROOT, BRANCH
+ENV = detect_env()
 
-if __name__ == "__main__":
-    check_environment()
 
-from modules.envir_manager import get_env_context
+# ==========================================================
+# 2) pip check NON bloccante (solo in HF)
+#    - Spaces usa variables come env-var a runtime
+#      secondo documentazione ufficiale. [1](https://vercel.com/docs/plans/hobby)
+#    - Le dipendenze sono installate in fase BUILD
+#      tramite requirements.txt del repo dello Space. [2](https://cloudvisor.co/is-amazon-sagemaker-free/)
+# ==========================================================
+def pip_check_non_blocking(timeout_sec=6):
+    def run():
+        try:
+            print("=== pip check (HF runtime) ===")
+            subprocess.run(["pip", "check"], check=False)
+            print("=== pip check done ===")
+        except Exception as e:
+            print(f"[pip_check skipped] {e}")
 
-# 1. Recupero dei dati dal modulo
-envir = get_env_context()
+    t = threading.Thread(target=run, daemon=True)
+    t.start()
+    t.join(timeout=timeout_sec)
 
-# 2. Stampa di prova nel main per verifica visiva (come richiesto)
-print(f"{'='*40}")
-print(f"VERIFICA AMBIENTE:")
-for chiave, valore in envir.items():
-    print(f"{chiave:15} : {valore}")
-print(f"{'='*40}")
 
-# 3. Da qui in poi usi solo il dizionario ambiente
-# Esempio: os.chdir(ambiente['ROOT']
-# --- TEST DI VERIFICA (Opzionale, solo per debug visivo) ---
-if __name__ == "__main__":
-    print(f"✅ 'envir' inizializzato in modalità: {envir['ENV']}")
- #   print(f"📍 Database locale puntato in: {envir['PATH_DB_LOCAL']}")
-    print(envir)
+if ENV == "HF_SPACE":
+    pip_check_non_blocking()
+
+
+# ==========================================================
+# 3) UI Gradio minima (ZERO CREDITI)
+#    - Gli Spaces eseguono Gradio dentro un iframe come
+#      parte del runtime ufficiale. [3](https://www.freetiers.com/directory/vercel)
+# ==========================================================
+def show_env():
+    info = [
+        f"ENV: {ENV}",
+        f"ROOT: {Path.cwd()}",
+        f"BRANCH: main" if ENV == "HF_SPACE" else "(n/a)"
+    ]
+    return "\n".join(info)
+
+
+# In HF serve una UI da lanciare:
+if ENV == "HF_SPACE":
+    demo = gr.Interface(
+        fn=show_env,
+        inputs=None,
+        outputs=gr.Textbox(lines=12),
+        title="Environment Check (HF)"
+    )
+    demo.launch()
+
+
+# ==========================================================
+# 4) CLI mode (GitHub Actions / Local)
+# ==========================================================
+if ENV == "GITHUB_ACTION":
+    print("Running inside GitHub Actions.")
+    print(show_env())
+
+if ENV == "LOCAL":
+    print("Running locally.")
+    print(show_env())
