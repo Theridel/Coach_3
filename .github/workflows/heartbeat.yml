@@ -1,9 +1,10 @@
 # controlliamo l'ecosistema
-name: Heartbeat - Test ogni ora
+name: Heartbeat - Test quotidiano
 
 on:
   schedule:
     - cron: "8 8 * * *"   # ogni ora, all'8avo minuto (UTC)
+
   workflow_dispatch:
 
 concurrency:
