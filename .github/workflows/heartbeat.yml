@@ -1,9 +1,10 @@
-# Controlliamo tutto l'ecosistema
-name: Heartbeat - Test ogni 10 minuti
+# controlliamo l'ecosistema
+name: Heartbeat - Test quotidiano
 
 on:
   schedule:
-    - cron: "38 8 * * *"   # ogni 10 minuti (UTC)
+    - cron: "8 8 * * *"   # ogni ora, all'8avo minuto (UTC)
+
   workflow_dispatch:
 
 concurrency:
@@ -11,23 +12,63 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  heartbeat:
-    runs-on: ubuntu-22.04
+  ecosystem_check:
+    name: "Heartbeat & Vercel Inspector"
+    runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
-      - name: Heartbeat Log (stdout)
-        run: |
-          echo "Heartbeat OK - $(date -u '+%Y-%m-%d %H:%M:%S') UTC"
-
-      - name: Prepara file di log (opzionale, per debug)
+      - name: 1. Setup Workspace
         run: |
           mkdir -p logs
-          echo "Heartbeat OK - $(date -u '+%Y-%m-%d %H:%M:%S') UTC" > logs/heartbeat.txt
+          echo "Inizializzazione check ecosistema: $(date -u)"
 
-      - name: Carica artifact (opzionale)
+      - name: 2. Heartbeat (Stato Sistema)
+        run: |
+          TS="$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
+          echo "Heartbeat OK - $TS" > logs/ecosystem.log
+          # Stampiamo anche a video per vederlo subito nei log di GitHub
+          echo "Pulsazione registrata: $TS"
+
+      - name: 3. Inspector (Vercel App)
+        env:
+          APP_URL: "https://coach-2-0-git-sviluppo-theridels-projects.vercel.app/"
+        run: |
+          # Eseguiamo il check di Vercel
+          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" -L \
+                    --max-time 15 --connect-timeout 5 \
+                    "$APP_URL" || echo "000")
+          
+          TS="$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
+          
+          # Scriviamo nello STESSO file del heartbeat usando >>
+          echo "$TS - Vercel Status: $STATUS" >> logs/ecosystem.log
+          echo "Status Vercel rilevato: $STATUS"
+
+      - name: 4. Carica Report Unificato
         uses: actions/upload-artifact@v4
         with:
-          name: heartbeat-${{ github.run_number }}-${{ github.run_attempt }}
-          path: logs/heartbeat.txt
-          retention-days: 3
+          # Un solo artifact con entrambi i risultati
+          name: ecosystem-report-${{ github.run_number }}
+          path: logs/ecosystem.log
+          retention-days: 7
+          
+# --- TERZO JOB: INTERROGA SUPABASE ---
+  keep-alive-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simple Ping to Supabase
+        env:
+          SB_URL: ${{ secrets.SUPABASE_URL }}
+        run: |
+          # Facciamo una richiesta anonima. 
+          # Risponderà probabilmente con un 401 (Unauthorized), 
+          # ma è sufficiente per "svegliare" l'infrastruttura.
+          curl -i $SB_URL > supabase_ping.txt
+
+      - name: Upload Simple Ping Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-ping
+          path: supabase_ping.txt
+          retention-days: 7
