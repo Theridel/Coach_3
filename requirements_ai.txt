@@ -5,7 +5,8 @@
 # ESECUZIONE MODELLI LOCALI
 # Permette di far girare i modelli GGUF (Llama, Mistral) direttamente
 # sulla CPU/GPU di SageMaker o Colab senza passare per API esterne.
-llama-cpp-python>=0.2.1,<1.0.0
+llama-cpp-python>=0.2.10,<0.3.0; python_version >= "3.9" and python_version < "3.11"
+llama-cpp-python>=0.3.0,<0.4.0; python_version >= "3.11" and python_version <= "3.14"
 
 # ORCHESTRAZIONE AGENTI
 # Collega il tuo database Supabase (già configurato nel Core) 
@@ -23,7 +24,9 @@ langchain>=0.3.0,<2.0.0; python_version >= "3.11" and python_version <= "3.14"
 
 # CALCOLO MATEMATICO & VETTORIALE
 # Fondamentale per la gestione degli embeddings (la memoria semantica dell'AI).
-numpy>=1.26.4,<2.2.0
+numpy>=1.26.4,<2.0.0; python_version >= "3.9" and python_version < "3.11"
+numpy>=0.3.0,<2.2.0; python_version >= "3.11" and python_version <= "3.14"
+numpy>=2.0.0,<2.2.0
 
 # ANALISI DATI BASE
 # Pandas è utile per formattare i dati prima di inviarli al frontend o all'agente.
