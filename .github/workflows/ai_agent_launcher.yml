@@ -20,11 +20,16 @@ jobs:
       - name: 3. Installazione dipendenze minime
         run: |
           python -m pip install --upgrade pip
+          # --- LIST PREVENTIVO ---
+          # Ti mostra cosa c'è già nella VM di GitHub prima dei tuoi pacchetti
+          echo "=== Stato iniziale della VM ==="
+          pip list
           # Se il file esiste, lo installa, altrimenti prosegue
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements_ai.txt ]; then pip install -r requirements_ai.txt; fi
 
           # Verifica
+          echo "=== Stato finale della VM ==="
           pip list
           pip check
           
