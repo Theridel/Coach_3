@@ -25,8 +25,7 @@ langchain>=0.3.0,<2.0.0; python_version >= "3.11" and python_version <= "3.14"
 # CALCOLO MATEMATICO & VETTORIALE
 # Fondamentale per la gestione degli embeddings (la memoria semantica dell'AI).
 numpy>=1.26.4,<2.0.0; python_version >= "3.9" and python_version < "3.11"
-numpy>=0.3.0,<2.2.0; python_version >= "3.11" and python_version <= "3.14"
-numpy>=2.0.0,<2.2.0
+numpy>=2.0.0,<2.2.0; python_version >= "3.11" and python_version <= "3.14"
 
 # ANALISI DATI BASE
 # Pandas è utile per formattare i dati prima di inviarli al frontend o all'agente.
