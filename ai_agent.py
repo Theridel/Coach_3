@@ -1,13 +1,29 @@
+# ==============================================================================
+# Fase 1: Check-up, rilevazione ambiente e settaggio branch
+# ==============================================================================
+# 1.1 Check-up (Versione semplificata per tutti gli ambienti)
 import os
 import sys
-import subprocess
-import threading
 from pathlib import Path
+
+print("Versione del file 0.3.2, pushata in github\n Versione Python:")
+print(sys.version)
+print(f"PATH (Eseguibili):\n {os.environ.get('PATH', 'N/A')}")
+print(f"sys.path (Librerie Python):\n {sys.path}")
+print(f"CWD attuale: {Path.cwd()}")
+
+# Equivalente dei comandi %pip della cella 0
+print("\n=== Elenco librerie (pip list) ===")
+os.system("pip list")
+
+print("\n=== Controllo integrità (pip check) ===")
+os.system("pip check")
+    
+import threading
 import gradio as gr
 
-
 # ==========================================================
-# 1) Rilevamento ambiente (SEMPLICE)
+# 1.2 Rilevamento ambiente (SEMPLICE)
 # ==========================================================
 def detect_env():
     if os.getenv("RUN_CONTEXT") == "HF_SPACE":
@@ -16,8 +32,6 @@ def detect_env():
         return "GITHUB_ACTION"
     else:
         return "LOCAL"
-
-
 ENV = detect_env()
 
 
