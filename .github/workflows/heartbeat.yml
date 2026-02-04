@@ -72,3 +72,24 @@ jobs:
           name: supabase-ping
           path: supabase_ping.txt
           retention-days: 7
+
+# --- QUARTO JOB: HEARTBEAT HUGGING FACE SPACE ---
+  keep-alive-hf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping HuggingFace Space
+        env:
+          HF_URL: "https://theridel-orchestratore.hf.space"
+        run: |
+          echo "➡️ Contatto lo Space HF: $HF_URL"
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" "$HF_URL" || echo "000")
+          TS="$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
+          echo "$TS - HF Status: $CODE" > hf_ping.txt
+          echo "Stato HF rilevato: $CODE"
+
+      - name: Upload HF Ping Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf-ping
+          path: hf_ping.txt
+          retention-days: 7
