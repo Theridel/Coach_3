@@ -95,7 +95,7 @@ jobs:
           retention-days: 7
 
           
- --- TEST GITHUB -> HF /ingest (A: senza firma -> 401, B: con firma -> 200) ---
+# --- TEST GITHUB -> HF /ingest (A: senza firma -> 401, B: con firma -> 200) ---
   test-ingest-endpoint:
     name: "Test HF /ingest (401 no-sign, 200 signed)"
     runs-on: ubuntu-latest
