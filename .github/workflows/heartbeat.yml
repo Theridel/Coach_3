@@ -94,7 +94,7 @@ jobs:
           path: hf_ping.txt
           retention-days: 7
 
-       - name: Send Heartbeat to Supabase
+      - name: Send Heartbeat to Supabase
         env:
           SB_URL: ${{ secrets.SUPABASE_URL }}
           SB_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -108,4 +108,4 @@ jobs:
             "vercel_status": "check_run", 
             "hf_status": "check_run",
             "notes": "Action #${{ github.run_number }} executed"
-          }'   
+          }'
