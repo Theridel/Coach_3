@@ -4,7 +4,6 @@ name: Heartbeat - Test quotidiano
 on:
   schedule:
     - cron: "8 */6 * * *"   # ogni 6 ore, all'8avo minuto (UTC)
-
   workflow_dispatch:
 
 concurrency:
@@ -45,6 +44,17 @@ jobs:
           echo "$TS - Vercel Status: $STATUS" >> logs/ecosystem.log
           echo "Status Vercel rilevato: $STATUS"
 
+      - name: 3b. Heartbeat (Hugging Face)
+        env:
+          HF_URL: "https://theridel-orchestratore.hf.space"
+        run: |
+          # Eseguiamo il ping
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" "$HF_URL" || echo "000")
+          TS="$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
+          
+          # APPENDIAMO allo stesso file di Vercel
+          echo "$TS - HF Status: $CODE" >> logs/ecosystem.log
+          echo "Stato HF aggiunto al log: $CODE"
       - name: 4. Carica Report Unificato
         uses: actions/upload-artifact@v4
         with:
@@ -77,23 +87,6 @@ jobs:
   keep-alive-hf:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping HuggingFace Space
-        env:
-          HF_URL: "https://theridel-orchestratore.hf.space"
-        run: |
-          echo "➡️ Contatto lo Space HF: $HF_URL"
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" "$HF_URL" || echo "000")
-          TS="$(date -u '+%Y-%m-%d %H:%M:%S') UTC"
-          echo "$TS - HF Status: $CODE" > hf_ping.txt
-          echo "Stato HF rilevato: $CODE"
-
-      - name: Upload HF Ping Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: hf-ping
-          path: hf_ping.txt
-          retention-days: 7
-
       - name: Send Heartbeat to Supabase
         env:
           SB_URL: ${{ secrets.SUPABASE_URL }}
