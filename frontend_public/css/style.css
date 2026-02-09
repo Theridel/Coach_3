@@ -77,30 +77,6 @@ header h1, header p {
   }
 }
 
-/* Link Card */
-.link-card {
-    display: block;
-    padding: 18px 25px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--primary-color);
-    background-color: var(--secondary-color);
-    font-weight: bold;
-    font-size: 1.1em;
-    transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    text-align: center; /* Centra il testo all'interno della card */
-    width: 100%;
-    max-width: 400px;
-}
-
-.link-card:hover {
-    background-color: #dee2e6;
-    border-color: var(--primary-color);
-    transform: translateY(-2px); 
-}
-
 /* Stile per i pulsanti di navigazione secondari */
 .btn-link {
     display: inline-block;
@@ -123,23 +99,6 @@ header h1, header p {
 }
 
 /* Media Query: Adattamento per schermi più grandi (Tablet/Desktop) */
-@media (min-width: 600px) {
-    .container {
-        margin-top: 40px;
-        width: 90%;
-    }
-    
-    .grid {
-        /* Passaggio a layout a griglia/colonne per schermi più grandi */
-        flex-direction: row; 
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .link-card {
-        flex-basis: calc(50% - 7.5px); /* Due colonne */
-    }
-}
 
 footer {
     text-align: center;
