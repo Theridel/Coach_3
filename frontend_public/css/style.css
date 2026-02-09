@@ -1,0 +1,6 @@
+:root {
+    --primary-color: #0056b3; /* Blu scuro per evidenza */
+    --secondary-color: #e9ecef; /* Sfondo per le card */
+    --background-light: #f8f9fa;
+    --text-dark: #343a40;
+}
