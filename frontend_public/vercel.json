@@ -1,5 +1,8 @@
 {
-  "cleanUrls": true,
-  "framework": null,
-  "outputDirectory": "frontend_public"
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/css/(.*)", "destination": "/frontend_public/css/$1" },
+    { "source": "/(.*)", "destination": "/frontend_public/$1" }
+  ]
 }
