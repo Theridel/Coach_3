@@ -1,0 +1,152 @@
+:root {
+    --primary-color: #0056b3; /* Blu scuro per evidenza */
+    --secondary-color: #e9ecef; /* Sfondo per le card */
+    --background-light: #f8f9fa;
+    --text-dark: #343a40;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+}
+
+.container {
+    width: 95%; 
+    max-width: 800px;
+    margin: 20px auto; 
+    padding: 0;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: var(--text-dark);
+    margin-top: 0;
+}
+
+header h1, header p {
+    color: white;
+}
+
+/* Layout del Launchpad con CSS Grid Unificato */
+.container-pulsanti {
+  display: grid;
+  grid-template-columns: 1fr; /* Default mobile: 1 colonna */
+  gap: 15px;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+/* Modifica la tua classe .link-card esistente aggiungendo larghezza automatica */
+.link-card {
+  display: block;
+  padding: 18px 25px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--primary-color);
+  background-color: var(--secondary-color);
+  font-weight: bold;
+  font-size: 1.1em;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  width: auto; /* Lasciamo che Grid decida la larghezza */
+}
+
+/* Aggiorna la tua Media Query esistente */
+@media (min-width: 600px) {
+  .container {
+    margin-top: 40px;
+    width: 90%;
+  }
+  
+  .container-pulsanti {
+    grid-template-columns: 1fr 1fr; /* Sopra i 600px: 2 colonne */
+    max-width: 800px;
+  }
+}
+
+/* Link Card */
+.link-card {
+    display: block;
+    padding: 18px 25px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center; /* Centra il testo all'interno della card */
+    width: 100%;
+    max-width: 400px;
+}
+
+.link-card:hover {
+    background-color: #dee2e6;
+    border-color: var(--primary-color);
+    transform: translateY(-2px); 
+}
+
+/* Stile per i pulsanti di navigazione secondari */
+.btn-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: background-color 0.3s, opacity 0.2s;
+    margin: 10px 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-link:hover {
+    background-color: #004494; /* Un blu leggermente più scuro del primary */
+    color: white;
+    opacity: 0.9;
+}
+
+/* Media Query: Adattamento per schermi più grandi (Tablet/Desktop) */
+@media (min-width: 600px) {
+    .container {
+        margin-top: 40px;
+        width: 90%;
+    }
+    
+    .grid {
+        /* Passaggio a layout a griglia/colonne per schermi più grandi */
+        flex-direction: row; 
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .link-card {
+        flex-basis: calc(50% - 7.5px); /* Due colonne */
+    }
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9em;
+    color: var(--text-dark);
+    border-top: 1px solid #dee2e6;
+    padding-left: 10px; /* ✅ aggiunto */
+    padding-right: 10px; /* ✅ aggiunto */
+}
