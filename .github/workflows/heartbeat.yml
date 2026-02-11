@@ -11,6 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # --- PRIMO JOB: HEARTBEAT, VERCEL E HUGGING FACE CHECK ---
   ecosystem_check:
     name: "Heartbeat & Vercel Inspector"
     runs-on: ubuntu-latest
@@ -63,7 +64,7 @@ jobs:
           path: logs/ecosystem.log
           retention-days: 7
           
-# --- TERZO JOB: INTERROGA SUPABASE ---
+  # --- SECONDOO JOB: INTERROGA SUPABASE ---
   keep-alive-supabase:
     runs-on: ubuntu-latest
     steps:
@@ -83,16 +84,15 @@ jobs:
           path: supabase_ping.txt
           retention-days: 7
 
-# --- QUARTO JOB: HEARTBEAT HUGGING FACE SPACE ---
+# --- TERZO JOB: DOPPIO INVIO (DIRETTO + ORCHESTRATORE) ---
   keep-alive-hf:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Heartbeat to Supabase
+      - name: 1. Send Heartbeat to Supabase (Legacy)
         env:
           SB_URL: ${{ secrets.SUPABASE_URL }}
           SB_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          # Esempio di invio dati
           curl -X POST "${SB_URL}/rest/v1/heartbeats" \
           -H "apikey: ${SB_KEY}" \
           -H "Authorization: Bearer ${SB_KEY}" \
@@ -100,5 +100,22 @@ jobs:
           -d '{
             "vercel_status": "check_run", 
             "hf_status": "check_run",
-            "notes": "Action #${{ github.run_number }} executed"
+            "notes": "Action #${{ github.run_number }} (Direct)"
+          }'
+
+      - name: 2. Wait for 10 seconds
+        run: sleep 10
+
+      - name: 3. Send Heartbeat to HF Orchestrator (New Path)
+        env:
+          HF_URL: "https://theridel-orchestratore.hf.space/webhook"
+        run: |
+          curl -X POST "$HF_URL" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "vercel_status": "check_run", 
+            "hf_status": "check_run",
+            "run_number": "${{ github.run_number }}",
+            "notes": "Action #${{ github.run_number }} (via HF)",
+            "source": "github_action"
           }'
