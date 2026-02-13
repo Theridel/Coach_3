@@ -1,9 +1,9 @@
-# controlliamo l'ecosistema
+# Controlliamo l'ecosistema
 name: Heartbeat - Test quotidiano
 
 on:
   schedule:
-    - cron: "8 */6 * * *"   # ogni 6 ore, all'8avo minuto (UTC)
+    - cron: "8 */8 * * *"   # ogni 8 ore, all'8avo minuto (UTC)
   workflow_dispatch:
 
 concurrency:
@@ -13,7 +13,7 @@ concurrency:
 jobs:
   # --- PRIMO JOB: HEARTBEAT, VERCEL E HUGGING FACE CHECK ---
   ecosystem_check:
-    name: "Heartbeat & Vercel Inspector"
+    name: "Heartbeat & system inspector"
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -30,9 +30,9 @@ jobs:
           # Stampiamo anche a video per vederlo subito nei log di GitHub
           echo "Pulsazione registrata: $TS"
 
-      - name: 3. Inspector (Vercel App)
+      - name: 3a. Inspector (Vercel App)
         env:
-          APP_URL: "https://coach-2-0-git-sviluppo-theridels-projects.vercel.app/"
+          APP_URL: "https://coach3-git-sviluppo-theridels-projects.vercel.app/"
         run: |
           # Eseguiamo il check di Vercel
           STATUS=$(curl -sS -o /dev/null -w "%{http_code}" -L \
@@ -56,6 +56,7 @@ jobs:
           # APPENDIAMO allo stesso file di Vercel
           echo "$TS - HF Status: $CODE" >> logs/ecosystem.log
           echo "Stato HF aggiunto al log: $CODE"
+          
       - name: 4. Carica Report Unificato
         uses: actions/upload-artifact@v4
         with:
@@ -63,12 +64,8 @@ jobs:
           name: ecosystem-report-${{ github.run_number }}
           path: logs/ecosystem.log
           retention-days: 7
-          
-  # --- SECONDOO JOB: INTERROGA SUPABASE ---
-  keep-alive-supabase:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Simple Ping to Supabase
+
+      - name: 5. Simple Ping to Supabase
         env:
           SB_URL: ${{ secrets.SUPABASE_URL }}
         run: |
@@ -77,15 +74,16 @@ jobs:
           # ma è sufficiente per "svegliare" l'infrastruttura.
           curl -i $SB_URL > supabase_ping.txt
 
-      - name: Upload Simple Ping Artifact
+      - name: 5b. Upload Simple Ping Artifact
         uses: actions/upload-artifact@v4
         with:
           name: supabase-ping
           path: supabase_ping.txt
           retention-days: 7
 
-# --- TERZO JOB: DOPPIO INVIO (DIRETTO + ORCHESTRATORE) ---
-  keep-alive-hf:
+  # --- SECONDO JOB: DOPPIO INVIO (DIRETTO + ORCHESTRATORE) ---
+  keep-alive-supabase:
+    needs: ecosystem_check
     runs-on: ubuntu-latest
     steps:
       - name: 1. Send Heartbeat to Supabase (Legacy)
