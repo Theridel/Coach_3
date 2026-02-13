@@ -1,12 +1,14 @@
 
-### **a) Componenti e ruolo** (da verificare)
+### **a) Componenti e ruolo** 
 
+*   **Vercel** → Sito pubblico / API leggere. → Interfaccia col sistema
+*   **Supabase** → SQL + Vector Store. → Storage e RAG
+*   **GitHub** → Repository + Actions.
+*   **Hugging Face Space A** → Orchestratore dei moduli 
+*   (da verificare)  
+*   **Hugging Face Space** → Interfaccia AI + runtime controllato.  
 *   **Firebase Spark** → Authentication, Firestore (o RTDB), Functions (free), Hosting, Storage.
-*   **Supabase** → SQL + Vector Store.
-*   **Hugging Face Space** → Interfaccia AI + runtime controllato.
-*   **GitHub** → Source of truth + Actions.
 *   **Colab / Sagemaker SL** → Orchestrazione e lavori pesanti.
-*   **Vercel** → Sito pubblico / API leggere.
 *   **Neo4j AuraDB Free** → Knowledge graph.
 *   **Deta Space** → Microservizi + Cron.
 
@@ -15,22 +17,25 @@
 Un semplice schema ASCII nel markdown:
 
                 ┌──────────┐
-                │   Vercel │
+                │   Vercel │  Interfaccia
                 └─────┬────┘
                       │ REST
-         ┌────────────┼─────────────┐
-         │            │             │
-    ┌────▼─────┐  ┌───▼───────┐  ┌──▼──────────┐
-    │ Firebase │  │ Supabase  │  │ HF Space    │
-    │  Spark   │  │ SQL+Vec   │  │ AI runtime  │
+                      ┼─────────────┐
+                      │             │
+    ┌──────────┐  ┌───▼───────┐  ┌──▼──────────┐
+    │ Github   │──│ HF Space  │  │ Deta Space  │
+    │Cron Jobs │  │ SQL+Vec   │  │ AI runtime  │Deta Space
     └────┬─────┘  └────┬──────┘  └────┬────────┘
          │             │              │
          │             │ Storage/     │ Jobs
          │             │ functions    │
-    ┌────▼──────────┐  │          ┌───▼─────────┐
-    │ Deta Space    │◄─┘          │ Colab/SMSL  │
-    │ Cron Jobs     │             │ Orchestrator│
+    ┌────▼──────────┐  │          ┌───▼─────────┐Firebase
+    │ Supabase      │◄─┘          │ Colab/SMSL  │
+    │ AI runtime    │             │ Orchestrator│ Spark
     └───────────────┘             └──────────────┘
+
+
+
 
 
 
