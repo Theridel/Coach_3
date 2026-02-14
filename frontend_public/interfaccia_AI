@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theridel Coach - Interfaccia Agent</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>AI Agent Console</h1>
+        <p>Ambiente di inferenza e controllo rapido.</p>
+    </header>
+
+    <main class="container">
+        <div class="nav-controls" style="margin-bottom: 25px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="index.html" class="btn-link">🏠 Torna alla Home</a>
+            <a href="modificaAI.html" class="btn-link">⚙️ Modifica Direttive AI</a>
+        </div>
+
+        <section id="inference-container" class="card" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid #444;">
+            <h2 style="margin-top: 0;">Inferenza in tempo reale</h2>
+            
+            <div id="inference-window" style="height: 350px; overflow-y: auto; background: #111; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; font-family: monospace; color: #0f0;">
+                <p><em>> Sistema pronto. In attesa di input per l'elaborazione...</em></p>
+            </div>
+
+            <div class="input-group" style="display: flex; gap: 10px;">
+                <textarea id="user-prompt" placeholder="Inserisci comando o quesito..." style="flex-grow: 1; min-height: 80px; background: #222; color: white; border: 1px solid #555; border-radius: 6px; padding: 10px; resize: vertical;"></textarea>
+                <button class="btn-link" style="padding: 0 25px; cursor: pointer;">Esegui</button>
+            </div>
+        </section>
+
+        <section style="margin-top: 20px; font-size: 0.9em; color: #888; text-align: center;">
+            <p>Le risposte vengono generate basandosi sulle direttive caricate in <em>Modifica AI</em>.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Theridel Coach v2.0 - Sviluppo Modulare [cite: 2026-02-11]</p>
+    </footer>
+</body>
+</html>
