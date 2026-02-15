@@ -8,7 +8,7 @@ async function loadAllDirectives() {
     if (!container) return; // Sicurezza: evita errori se l'elemento non esiste
 
     try {
-        const response = await fetch('/api/get-directives');
+        const response = await fetch('/api/get_directives');
         if (!response.ok) throw new Error('Impossibile recuperare i dati dalle API');
 
         const data = await response.json();
@@ -49,7 +49,7 @@ async function updateDirective(id) {
     btn.innerText = 'Salvataggio in corso...';
 
     try {
-        const response = await fetch('/api/update-directives', {
+        const response = await fetch('/api/update_directives', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id, contenuto: nuovoContenuto })
