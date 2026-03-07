@@ -1,0 +1,18 @@
+name: Docker Exercise - Modules Version
+
+on: [workflow_dispatch]
+
+jobs:
+  run-docker-exercise:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Checkout del codice
+        uses: actions/checkout@v4
+
+      - name: 2. Build dell'immagine
+        # Il punto "." indica a Docker di guardare nella radice del repo
+        # cercando il Dockerfile e la cartella /modules
+        run: docker build -t my-hello-app .
+
+      - name: 3. Esecuzione del container
+        run: docker run --name hello-instance my-hello-app
