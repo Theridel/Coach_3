@@ -1,5 +1,5 @@
 # 1. Immagine base
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # 2. Imposta la cartella di lavoro DENTRO il container
 WORKDIR /app
