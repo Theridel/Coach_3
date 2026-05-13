@@ -1,8 +1,8 @@
 # ROADMAP (valido)
 
-    ## Fase 1a — Heartbeat 
-    - [x] Definire architettura generale  
-    - [x] Creare cron job github per monitorare sistema (e tenerlo 'on')  
+## Fase 1a — Heartbeat 
+- [x] Definire architettura generale  
+- [x] Creare cron job github per monitorare sistema (e tenerlo 'on')  
 
     (in corso)
     
