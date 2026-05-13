@@ -1,8 +1,11 @@
-# ROADMAP
+# ROADMAP (valido)
 
-    ## Fase 1a — Heartbeat (in corso)
-    - [x] Definire architettura generale
-    - [x] Creare cron job github per monitorare sistema (e tenerlo 'on')
+    ## Fase 1a — Heartbeat 
+    - [x] Definire architettura generale  
+    - [x] Creare cron job github per monitorare sistema (e tenerlo 'on')  
+
+    (in corso)
+    
     - [x] Salvare su Supabase il log di Github
     - [x] Salvare su Supabase il log di Github tramite orchestrator HF
     - [ ] Sanificare il json di comunicazione
@@ -30,16 +33,15 @@
 Nuovo
 
 Roadmap di Sistema — Multi‑Agente con Orchestratore HF
-Fase 1a — Heartbeat (in corso)
-• 	[x] Definire architettura generale
-• 	[x] Creare cron job GitHub per monitorare sistema
+
 • 	[x] Salvare su Supabase il log di GitHub
 • 	[x] Salvare su Supabase il log di GitHub tramite orchestrator HF
+• 	[ ] aggiornare Actions a @v4
 • 	[ ] Sanificare il JSON di comunicazione
 • 	[ ] Ripulire comunicazione diretta GitHub → Supabase e tabella heartbeat
 • 	[ ] Normalizzare identità dell’agente GitHub ()
 • 	[ ] Definire permessi minimi dell’agente GitHub
-• 	[ ] Implementare tabelle , , 
+• 	[ ] Implementare tabelle
 • 	[ ] Validazione heartbeat lato BUS (anti‑allucinazione)
 
 Fase 1b — Interfaccia Vercel
