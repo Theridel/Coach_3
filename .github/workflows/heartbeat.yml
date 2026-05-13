@@ -3,7 +3,7 @@ name: Heartbeat - Test quotidiano
 
 on:
   schedule:
-    - cron: "8 */8 * * *"   # ogni 8 ore, all'8avo minuto (UTC)
+    - cron: "8 */12 * * *"   # ogni 8 ore, all'8vo minuto (UTC)
   workflow_dispatch:
 
 concurrency:
@@ -58,7 +58,7 @@ jobs:
           echo "Stato HF aggiunto al log: $CODE"
           
       - name: 4. Carica Report Unificato
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           # Un solo artifact con entrambi i risultati
           name: ecosystem-report-${{ github.run_number }}
@@ -75,7 +75,7 @@ jobs:
           curl -i $SB_URL > supabase_ping.txt
 
       - name: 5b. Upload Simple Ping Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: supabase-ping
           path: supabase_ping.txt
