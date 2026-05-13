@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 1. Checkout del codice
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 2. Build dell'immagine
         # Il punto "." indica a Docker di guardare nella radice del repo
