@@ -9,12 +9,12 @@ jobs:
     
     steps:
       - name: 1. Checkout del codice
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 2. Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
           # Per ora non usiamo la cache perché il requirements-ai è quasi vuoto
 
       - name: 3. Check-up Sistema & Installazione
