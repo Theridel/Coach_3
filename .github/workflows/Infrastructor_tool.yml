@@ -10,7 +10,7 @@ jobs:
     
     steps:
       - name: 🛰️ Source Code Check
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 🔑 Secret Existence & Format
         run: |
